@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Khodam</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .results {
+            margin-top: px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .results p {
+            margin-bottom: 5px;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin: 20px 0; /* Add margin to separate from button */
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 10px;
+            background-color: #4CAF50;
+            transition: width 0.5s ease;
+        }
+
+        #try-again {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cek Khodam</h1>
+        <p>Cek khodam yang ada di dalam diri kamu</p>
+        <input type="text" id="nama" placeholder="Nama">
+        <button id="check">CHECK</button>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="results" style="display: none;">
+            <p><strong>Nama:</strong> <span id="resultNama"></span></p>
+            <p><strong>Khodam:</strong> <span id="resultKhodam"></span></p>
+            <button id="try-again" style="display: none;">Coba Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        const namaInput = document.getElementById('nama');
+        const checkButton = document.getElementById('check');
+        const progressBar = document.getElementById('progressBar');
+        const resultNama = document.getElementById('resultNama');
+        const resultKhodam = document.getElementById('resultKhodam');
+        const resultsDiv = document.querySelector('.results');
+        const tryAgainButton = document.getElementById('try-again');
+
+        const jobs = [
+            "Programmer", "Dokter", "Guru", "Musisi", "Atlet",
+            "Designer", "Penulis", "Pekerja Konstruksi", "Seniman", "Juru Masak"
+        ];
+
+        checkButton.addEventListener('click', () => {
+            const nama = namaInput.value;
+            if (nama.trim() === "") {
+                alert("Masukkan nama Anda!");
+                return;
+            }
+
+            checkButton.disabled = true;
+            progressBar.style.width = "0%";
+            namaInput.disabled = true; // disable the input field
+
+            let progress = 0;
+            const intervalId = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = `${progress}%`;
+                if (progress >= 100) {
+                    clearInterval(intervalId);
+                    resultNama.textContent = nama;
+                    resultKhodam.textContent = getRandJob();
+                    resultsDiv.style.display = "flex";
+                    tryAgainButton.style.display = "block";
+                }
+            }, 50);
+        });
+
+        tryAgainButton.addEventListener('click', () => {
+            namaInput.value = "";
+            resultNama.textContent = "";
+            resultKhodam.textContent = "";
+            resultsDiv.style.display = "none";
+            tryAgainButton.style.display = "none";
+            progressBar.style.width = "0%";
+            checkButton.disabled = false;
+            namaInput.disabled = false; // enable the input field again
+        });
+
+        function getRandJob() {
+            const randomIndex = Math.floor(Math.random() * jobs.length);
+            return jobs[randomIndex];
+        }
+    </script>
+</body>
+</html>
